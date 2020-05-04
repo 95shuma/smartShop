@@ -3,6 +3,7 @@ package com.shop.smart.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,4 +25,8 @@ public class Category {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     @OrderBy("name ASC")
     List<Product> products;
+
+    public List<Product> getProducts() {
+        return new ArrayList<>();
+    }
 }

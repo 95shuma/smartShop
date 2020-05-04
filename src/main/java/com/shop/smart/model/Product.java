@@ -4,11 +4,10 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
-@Builder
+@Data @Builder
 @AllArgsConstructor(access = AccessLevel.PACKAGE) @NoArgsConstructor
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,14 +19,17 @@ public class Product {
     @Column(length = 45)
     private String description;
 
+    @Column(length = 45)
+    private String img;
+
     @Column
     private Float price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categories_id")
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brands_id")
     private Brand brand;
 }
