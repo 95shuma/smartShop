@@ -1,67 +1,48 @@
 package com.shop.smart.controller;
 
-import com.shop.smart.model.Brand;
-import com.shop.smart.model.Category;
+import com.shop.smart.PropertiesService;
 import com.shop.smart.model.Product;
-import com.shop.smart.model.User;
-import com.shop.smart.repository.BrandRepository;
-import com.shop.smart.repository.CategoryRepository;
 import com.shop.smart.repository.ProductRepository;
-import com.shop.smart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
-import java.util.List;
-
-@Controller
+@org.springframework.web.bind.annotation.RestController
 public class RestController {
-    @Autowired
-    BrandRepository br;
+
+    private final PropertiesService propertiesService;
 
     @Autowired
-    CategoryRepository cr;
+    ProductRepository pr;
 
-    @Autowired
-    UserRepository ur;
-
-    /*@GetMapping("/br")
-    public List<Brand> getBr(){
-        return br.findAll();
+    public RestController(PropertiesService propertiesService) {
+        this.propertiesService = propertiesService;
     }
 
-    @GetMapping("/cr")
-    public List<Category> getCr(){
-        return cr.findAll();
-    }*/
+//    @RequestMapping("/products")
+//    public Page<Product> getProducts(Pageable page){
+//
+//        return pr.findAll(page);
+//    }
 
-    @GetMapping("/registration")
-    public String registrationPage(Model model){
-        if (!model.containsAttribute("form")) {
-            model.addAttribute("form", new User());
+    private static <T> void constructPageable(Page<T> list, int pageSize, Model model, String uri) {
+        if (list.hasNext()) {
+            model.addAttribute("nextPageLink", constructPageUri(uri, list.nextPageable().getPageNumber(), list.nextPageable().getPageSize()));
         }
 
-        return "registration";
-    }
-
-    @PostMapping("/registration")
-    public String createUser(@Valid User user, BindingResult br, RedirectAttributes ra
-    ) {
-        ra.addFlashAttribute("form", user);
-        if (br.hasFieldErrors()){
-            ra.addFlashAttribute("errors",br.getFieldErrors());
-            return "redirect:/registration";
-        }else {
-            System.out.println(user);
-            ur.save(user);
-            return "redirect:/";
+        if (list.hasPrevious()) {
+            model.addAttribute("prevPageLink", constructPageUri(uri, list.previousPageable().getPageNumber(), list.previousPageable().getPageSize()));
         }
+
+        model.addAttribute("hasNext", list.hasNext());
+        model.addAttribute("hasPrev", list.hasPrevious());
+        model.addAttribute("items", list.getContent());
+        model.addAttribute("defaultPageSize", pageSize);
     }
 
+    private static String constructPageUri(String uri, int page, int size) {
+        return String.format("%s?page=%s&size=%s", uri, page, size);
+    }
 }

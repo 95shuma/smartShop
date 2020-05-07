@@ -1,0 +1,30 @@
+.about-us{
+    color: #fff;
+    background-size: cover;
+}
+.about-us h2{
+    font-size: 40px;
+    font-weight: 400;
+    color: aqua;
+}
+.about-us p{
+    font-size: 16px;
+    font-weight: 400;
+}
+.about-us .card{
+    border: none;
+    background-color: transparent;
+
+}
+.about-us .card1{
+    border: 1px solid #fff;
+    background-color: #99FFFF;
+    margin-right: 2vw;
+    display: flex;
+    flex-direction: column;
+}
+.about-us h5{
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+}

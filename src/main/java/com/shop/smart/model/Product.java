@@ -3,6 +3,7 @@ package com.shop.smart.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 
 @Data @Builder
 @AllArgsConstructor(access = AccessLevel.PACKAGE) @NoArgsConstructor
@@ -23,13 +24,14 @@ public class Product {
     private String img;
 
     @Column
+    @Positive
     private Float price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "categories_id")
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "brands_id")
     private Brand brand;
 }
