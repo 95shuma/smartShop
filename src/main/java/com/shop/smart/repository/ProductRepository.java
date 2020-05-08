@@ -11,21 +11,23 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     Page<Product> findAll(Pageable page);
 
-    @Query("select p from Product as p where p.name like CONCAT(:name, '%')")
-    List<Product> getByName(String name);
+    @Query("select p from Product as p where (p.name like CONCAT(:name, '%')) or (p.name like CONCAT('%',:name, '%')) or (p.name like CONCAT('%',:name))")
+    Page<Product> findProductByName(String name, Pageable page);
 
-    @Query("From Product as p where p.description like CONCAT(:description, '%')")
-    List<Product> getByDescription(String description);
+    @Query("From Product as p where (p.description like CONCAT(:description, '%')) or (p.description like CONCAT('%',:description, '%')) or (p.description like CONCAT('%',:description))")
+    Page<Product> findProductByDescription(String description, Pageable page);
 
     @Query("from Product as p where p.id = :id")
     Product findProductById(Integer id);
 
-    @Query("From Product where price<(:price)")
-    List<Product> getByPrice(Float price);
+    @Query("From Product as p where p.price<(:price)")
+    Page<Product> findProductByPrice(Float price, Pageable page);
 
-    @Query("From Product where brand.id = :brand")
-    List<Product> getByBrand(Integer brand);
+//    @Query("From Product where brand.id = :brand")
+//    Page<Product> getByBrand(Integer brand, Pageable page);
+    //@Query("From Product where brand.id = :brand")
+    Page<Product> findProductByBrand_Id(Integer brand, Pageable page);
 
-    @Query("From Product where category.name like CONCAT(:name,'%') ")
-    List<Product> getByCategory(String name);
+    //@Query("From Product where category.name = :name ")
+    Page<Product> findProductByCategory_Name(String name, Pageable page);
 }
