@@ -2,7 +2,7 @@
     <div class="container text-center">
         <h2 class="py-5 text-uppercase">All Products</h2>
         <div class="row text-center">
-            <#if products??>
+            <#if products?has_content>
                 <#list products as product>
                     <div class="card col-12 col-md-6 col-lg-4 mb-5">
                         <div class="card1 h-100">

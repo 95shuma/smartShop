@@ -34,7 +34,17 @@ public class User {
     private String login;
 
     @NotBlank(message = "Поле не должно быть пустым")
-    @Size(min=5, max = 45,message = "Пароль не должен быть меньше 5 и не больше 45 символов")
+    @Size(min=5, max = 128,message = "Пароль не должен быть меньше 5 и не больше 128 символов")
     @Column(length = 45)
     private String password;
+
+    @Column
+    @Builder.Default
+    private boolean enabled = true;
+
+    @NotBlank
+    @Size(min = 1, max = 128)
+    @Column(length = 128)
+    @Builder.Default
+    private String role = "USER";
 }

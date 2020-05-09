@@ -5,6 +5,9 @@
         <div class="mx-3">
             <form id="registration-form" action="/registration" method="post">
                 <h3>Регистрация</h3>
+                <#if _csrf??>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                </#if>
                 <input type="hidden" name="id" value="100">
                 <input type="email" name="mail" class="form-control mb-1" placeholder="Email">
                 <input type="text" name="name" class="form-control mb-1" placeholder="Полное имя">

@@ -1,13 +1,10 @@
 package com.shop.smart.controller;
 
-import com.shop.smart.PropertiesService;
-import com.shop.smart.model.Product;
+import com.shop.smart.service.PropertiesService;
 import com.shop.smart.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {

@@ -1,18 +1,17 @@
 package com.shop.smart.controller;
 
-import com.shop.smart.PropertiesService;
+import com.shop.smart.service.PropertiesService;
 import com.shop.smart.exception.ResourceNotFoundException;
 import com.shop.smart.model.User;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import com.shop.smart.repository.BrandRepository;
 import com.shop.smart.repository.CategoryRepository;
 import com.shop.smart.repository.ProductRepository;
 import com.shop.smart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class MainController {
@@ -38,9 +38,11 @@ public class MainController {
     ProductRepository pr;
 
     private final PropertiesService propertiesService;
+    private final PasswordEncoder encoder;
 
-    public MainController(PropertiesService propertiesService) {
+    public MainController(PropertiesService propertiesService, PasswordEncoder encoder) {
         this.propertiesService = propertiesService;
+        this.encoder = encoder;
     }
 
     private static <T> void constructPageable(Page<T> list, int pageSize, Model model, String uri) {
@@ -145,10 +147,10 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/login")
+    /*@GetMapping("/login")
     public String loginPage(){
         return "login";
-    }
+    }*/
 
 
     @GetMapping("/registration")
@@ -160,6 +162,12 @@ public class MainController {
         return "registration";
     }
 
+    @GetMapping("/login")
+    public String loginPage(@RequestParam(required = false, defaultValue = "false") Boolean error, Model model) {
+        model.addAttribute("error", error);
+        return "login";
+    }
+
     @PostMapping("/registration")
     public String createUser(@Valid User user, BindingResult br, RedirectAttributes ra
     ) {
@@ -169,9 +177,23 @@ public class MainController {
             return "redirect:/registration";
         }else {
             System.out.println(user);
+            user.setPassword(encoder.encode(user.getPassword()));
             ur.save(user);
-            return "redirect:/";
+            return "redirect:/login";
         }
+    }
+
+    @GetMapping("/profile")
+    public String pageCustomerProfile(Model model, Principal principal)
+    {
+        try {
+            var user = ur.findUserByMail(principal.getName());
+            model.addAttribute("dto", user);
+        }
+        catch (NullPointerException e){
+            model.addAttribute("error", "Пользователь не найден!");
+        }
+        return "profile";
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

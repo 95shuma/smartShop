@@ -1,4 +1,4 @@
-package com.shop.smart;
+package com.shop.smart.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;

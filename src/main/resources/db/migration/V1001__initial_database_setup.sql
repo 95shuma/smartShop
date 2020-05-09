@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS `smart`.`users` (
                           `name` VARCHAR(45) NOT NULL,
                           `mail` VARCHAR(45) NOT NULL,
                           `login` VARCHAR(45) NOT NULL,
-                          `password` VARCHAR(45) NOT NULL,
+                          `password` VARCHAR(128) NOT NULL,
+                          `enabled` boolean NOT NULL default true,
+                          `role` varchar(16) NOT NULL default 'USER',
                           PRIMARY KEY (`id`));
 
 
