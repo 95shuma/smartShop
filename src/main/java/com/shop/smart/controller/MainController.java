@@ -1,16 +1,14 @@
 package com.shop.smart.controller;
 
-import com.shop.smart.model.Basket;
-import com.shop.smart.model.BasketProduct;
-import com.shop.smart.model.Product;
+import com.shop.smart.model.*;
 import com.shop.smart.repository.*;
 import com.shop.smart.service.PropertiesService;
 import com.shop.smart.exception.ResourceNotFoundException;
-import com.shop.smart.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +22,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
@@ -46,6 +45,9 @@ public class MainController {
 
     @Autowired
     BasketProductRepository basketProductRepository;
+
+    @Autowired
+    ResetRepository resetRepo;
 
     private final PropertiesService propertiesService;
     private final PasswordEncoder encoder;
@@ -302,5 +304,6 @@ public class MainController {
         }
         return "order";
     }
+
 
 }

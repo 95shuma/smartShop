@@ -3,6 +3,11 @@
 <@main.renderWith>
     <h2>Please enter email to reset password</h2>
     <div>
+        <div>
+            <#if errorText?? >
+                <p style="color:red">${errorText}</p>
+            </#if>
+        </div>
     <form action="/forgot-password" method="post">
 
         <#if _csrf??>

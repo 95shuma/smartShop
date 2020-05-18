@@ -75,3 +75,15 @@ CREATE TABLE IF NOT EXISTS `smart`.`baskets_products` (
                          REFERENCES `smart`.`products` (`id`)
                          ON DELETE NO ACTION
                          ON UPDATE NO ACTION);
+
+CREATE TABLE IF NOT EXISTS `smart`.`resets` (
+                   `id` INT NOT NULL AUTO_INCREMENT,
+                   `token` VARCHAR(255) NULL DEFAULT NULL,
+                   `users_id` INT NOT NULL,
+                   PRIMARY KEY (`id`),
+                   INDEX `fk_resets_users_idx` (`users_id` ASC) VISIBLE,
+                   CONSTRAINT `fk_resets_users`
+                       FOREIGN KEY (`users_id`)
+                           REFERENCES `smart`.`users` (`id`)
+                           ON DELETE NO ACTION
+                           ON UPDATE NO ACTION);

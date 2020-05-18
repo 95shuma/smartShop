@@ -8,6 +8,7 @@
         <div>
             <#if error!false >
                 <p style="color:red">Неверные имя пользователя или пароль !</p>
+                <p><a href="/forgot-password"> Забыли </a>пароль</p>
             </#if>
         </div>
         <#if _csrf??>
