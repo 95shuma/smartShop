@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Positive;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data @Builder
 @AllArgsConstructor(access = AccessLevel.PACKAGE) @NoArgsConstructor
@@ -34,4 +36,11 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "brands_id")
     private Brand brand;
+
+    @OneToMany(mappedBy = "product")
+    private List<BasketProduct> basket;
+
+    public List<BasketProduct> getBasket() {
+        return new ArrayList<>();
+    }
 }

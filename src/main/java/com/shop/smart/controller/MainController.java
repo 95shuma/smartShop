@@ -1,14 +1,14 @@
 package com.shop.smart.controller;
 
+import com.shop.smart.model.Basket;
+import com.shop.smart.model.BasketProduct;
+import com.shop.smart.model.Product;
+import com.shop.smart.repository.*;
 import com.shop.smart.service.PropertiesService;
 import com.shop.smart.exception.ResourceNotFoundException;
 import com.shop.smart.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.shop.smart.repository.BrandRepository;
-import com.shop.smart.repository.CategoryRepository;
-import com.shop.smart.repository.ProductRepository;
-import com.shop.smart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,8 +19,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -36,6 +40,12 @@ public class MainController {
 
     @Autowired
     ProductRepository pr;
+
+    @Autowired
+    BasketRepository basketRepository;
+
+    @Autowired
+    BasketProductRepository basketProductRepository;
 
     private final PropertiesService propertiesService;
     private final PasswordEncoder encoder;
@@ -84,52 +94,109 @@ public class MainController {
     }
 
     @RequestMapping("/")
-    public String mainPage(Model model){
+    public String mainPage(Model model, Principal principal){
         model.addAttribute("brands",br.findAll());
         model.addAttribute("categories",cr.findAll());
+        try{
+            var user = ur.findUserByMail(principal.getName());
+            model.addAttribute("user",user);
+        }catch (NullPointerException e){
+            model.addAttribute("nouser",true);
+        }
         return "index";
     }
 
+    @GetMapping("/basket/clear")
+    public String clearBasket(){
+        basketRepository.deleteAll();
+        return "redirect:/products";
+    }
+
     @RequestMapping("/products")
-    public String getProducts(Model model, Pageable page, HttpServletRequest uriBuilder){
+    public String getProducts(Model model, Pageable page, HttpServletRequest uriBuilder, Principal principal, HttpSession session){
         var uri = uriBuilder.getRequestURI();
         constructPageable1(pr.findAll(page), propertiesService.getDefaultPageSize(), model,uri);
+        if(basketRepository.findBasketBySession(session.getId())==null){
+            try {
+                var user = ur.findUserByMail(principal.getName());
+                var basket = new Basket(user, session.getId());
+                basketRepository.save(basket);
+                model.addAttribute("authorization",1);
+            }catch(NullPointerException e){
+                var basket = new Basket(session.getId());
+                basketRepository.save(basket);
+                model.addAttribute("authorization",0);
+            }
+        }
         return "products";
     }
 
     @RequestMapping("/products/name")
-    public String getProductByName(Model model, @RequestParam("name") String name,  Pageable page, HttpServletRequest uriBuilder){
+    public String getProductByName(Model model, @RequestParam("name") String name,  Pageable page, HttpServletRequest uriBuilder, Principal principal){
         var uri = uriBuilder.getRequestURI().concat("?name=")+name;
-        constructPageable(pr.findProductByName(name,page), propertiesService.getDefaultPageSize(), model,uri);
+        if (pr.findProductByName(name,page).getContent().get(0)==null)
+            model.addAttribute("notFound",true);
+        else
+            constructPageable(pr.findProductByName(name,page), propertiesService.getDefaultPageSize(), model,uri);
+        try{
+            var user = ur.findUserByMail(principal.getName());
+            model.addAttribute("authorization",1);
+        }catch (NullPointerException e){
+            model.addAttribute("authorization",0);
+        }
         return "products";
     }
 
     @RequestMapping("/products/description")
-    public String getProductByDescription(Model model, @RequestParam("description") String description, Pageable page, HttpServletRequest uriBuilder){
+    public String getProductByDescription(Model model, @RequestParam("description") String description, Pageable page, HttpServletRequest uriBuilder, Principal principal){
         var uri = uriBuilder.getRequestURI().concat("?description=")+description;
         constructPageable(pr.findProductByDescription(description,page), propertiesService.getDefaultPageSize(), model,uri);
+        try{
+            var user = ur.findUserByMail(principal.getName());
+            model.addAttribute("authorization",1);
+        }catch (NullPointerException e){
+            model.addAttribute("authorization",0);
+        }
         return "products";
     }
 
     @RequestMapping("/products/brand")
-    public String getProductByBrand(Model model, @RequestParam("brand") Integer brand, Pageable page, HttpServletRequest uriBuilder){
+    public String getProductByBrand(Model model, @RequestParam("brand") Integer brand, Pageable page, HttpServletRequest uriBuilder, Principal principal){
         //model.addAttribute("products",pr.getByBrand(brand, page));
         var uri = uriBuilder.getRequestURI().concat("?brand=")+brand;
         constructPageable(pr.findProductByBrand_Id(brand, page), propertiesService.getDefaultPageSize(), model,uri);
+        try{
+            var user = ur.findUserByMail(principal.getName());
+            model.addAttribute("authorization",1);
+        }catch (NullPointerException e){
+            model.addAttribute("authorization",0);
+        }
         return "products";
     }
 
     @RequestMapping("/products/price")
-    public String getProductByPrice(Model model, @RequestParam("price") Float price, Pageable page, HttpServletRequest uriBuilder){
+    public String getProductByPrice(Model model, @RequestParam("price") Float price, Pageable page, HttpServletRequest uriBuilder, Principal principal){
         var uri = uriBuilder.getRequestURI().concat("?price=")+price;
         constructPageable(pr.findProductByPrice(price, page), propertiesService.getDefaultPageSize(), model,uri);
+        try{
+            var user = ur.findUserByMail(principal.getName());
+            model.addAttribute("authorization",1);
+        }catch (NullPointerException e){
+            model.addAttribute("authorization",0);
+        }
         return "products";
     }
 
     @RequestMapping("/products/category")
-    public String getProductByCategory(Model model, @RequestParam("category") String category, Pageable page, HttpServletRequest uriBuilder){
+    public String getProductByCategory(Model model, @RequestParam("category") String category, Pageable page, HttpServletRequest uriBuilder, Principal principal){
         var uri = uriBuilder.getRequestURI().concat("?category=")+category;
         constructPageable(pr.findProductByCategory_Name(category, page), propertiesService.getDefaultPageSize(), model,uri);
+        try{
+            var user = ur.findUserByMail(principal.getName());
+            model.addAttribute("authorization",1);
+        }catch (NullPointerException e){
+            model.addAttribute("authorization",0);
+        }
         return "products";
     }
 
@@ -146,12 +213,6 @@ public class MainController {
         model.addAttribute("products",pr.findAll());
         return "index";
     }
-
-    /*@GetMapping("/login")
-    public String loginPage(){
-        return "login";
-    }*/
-
 
     @GetMapping("/registration")
     public String registrationPage(Model model){
@@ -203,4 +264,43 @@ public class MainController {
         model.addAttribute("id", ex.getId());
         return "resource-not-found";
     }
+
+    @RequestMapping("products/basket")
+    public String getBasket(Model model, Principal principal, HttpSession session){
+        var user = ur.findUserByMail(principal.getName());
+        model.addAttribute("user",user);
+        var basket = basketRepository.findBasketByUserAndSession(user, session.getId());
+        if (basketProductRepository.findBasketProductByBasket(basket) == null) {
+            model.addAttribute("error", "No element");
+        } else {
+            List<BasketProduct> bpr = basketProductRepository.findBasketProductByBasket(basket);
+            model.addAttribute("products", bpr);
+        }
+        return "basket";
+    }
+
+    @RequestMapping("products/order")
+    public String getOrder(Model model, Principal principal, HttpSession session){
+        var user = ur.findUserByMail(principal.getName());
+        model.addAttribute("user",user);
+        var basket = basketRepository.findBasketByUserAndSession(user,session.getId());
+        if(basketProductRepository.findBasketProductByBasket(basket)==null){
+            model.addAttribute("error","No element");
+        } else {
+            List<BasketProduct> bpr = basketProductRepository.findBasketProductByBasket(basket);
+            model.addAttribute("products",bpr);
+            try{
+                float sum = 0;
+                for (BasketProduct bp:bpr) {
+                    sum+=(bp.getQuantity()*bp.getProduct().getPrice());
+                }
+                model.addAttribute("totalSum",sum);
+            } catch (Exception e){
+                model.addAttribute("errors","Null");
+            }
+
+        }
+        return "order";
+    }
+
 }

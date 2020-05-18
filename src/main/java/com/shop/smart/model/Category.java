@@ -22,6 +22,9 @@ public class Category {
     @Column(length = 45)
     private String description;
 
+    @Column(length = 45)
+    private String img;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     @OrderBy("name ASC")
     List<Product> products;

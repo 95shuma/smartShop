@@ -2,7 +2,7 @@
     <div class="container text-center">
         <h2 class="py-5 text-uppercase">All Products</h2>
         <div class="row text-center">
-            <#if products?has_content>
+            <#if products??>
                 <#list products as product>
                     <div class="card col-12 col-md-6 col-lg-4 mb-5">
                         <div class="card1 h-100">
@@ -13,11 +13,14 @@
                                 <div class="text-center soc-net1">
                                     <a class="px-2" href="http://localhost:8000/products/${product.id}">More</a>
                                 </div>
+                                <i onclick="addProduct(${product.id})" id="product${product.id}" class="fas fa-cart-plus" style="font-size: 3em"></i>
                             </div>
                         </div>
                     </div>
+
                 </#list>
-            <#else>
+            </#if>
+            <#if notFound??>
                 <h3 class="py-5 text-uppercase">Products not found</h3>
             </#if>
         </div>

@@ -47,4 +47,11 @@ public class User {
     @Column(length = 128)
     @Builder.Default
     private String role = "USER";
+
+    @OneToOne(mappedBy = "user")
+    private Basket basket;
+
+    public Basket getBasket() {
+        return null;
+    }
 }

@@ -2,6 +2,7 @@
 
 <@main.renderWith>
     <h2>Please sign in</h2>
+    <img src="/static/img/products/brands/nokia-logo.jpg">
     <form action="/login" method="post">
 
         <div>
@@ -9,7 +10,6 @@
                 <p style="color:red">Неверные имя пользователя или пароль !</p>
             </#if>
         </div>
-
         <#if _csrf??>
             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
         </#if>

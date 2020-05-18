@@ -20,6 +20,9 @@ public class Brand {
     @Column(length = 45)
     private String name;
 
+    @Column(length = 45)
+    private String img;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand") @OrderBy("name ASC")
     private List<Product> products;
 

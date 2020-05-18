@@ -1,8 +1,5 @@
 USE `smart` ;
 
--- -----------------------------------------------------
--- Table `smart`.`user`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `smart`.`users` (
                           `id` INT NOT NULL AUTO_INCREMENT,
                           `name` VARCHAR(45) NOT NULL,
@@ -11,16 +8,26 @@ CREATE TABLE IF NOT EXISTS `smart`.`users` (
                           `password` VARCHAR(128) NOT NULL,
                           `enabled` boolean NOT NULL default true,
                           `role` varchar(16) NOT NULL default 'USER',
-                          PRIMARY KEY (`id`));
+                          PRIMARY KEY (`id`),
+                        UNIQUE INDEX `mail_unique` (`mail` ASC));
 
+CREATE TABLE IF NOT EXISTS `smart`.`baskets` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `session` VARCHAR(128) NOT NULL,
+                        `users_id` INT NULL,
+                        PRIMARY KEY (`id`),
+                        INDEX `fk_baskets_users1_idx` (`users_id` ASC) VISIBLE,
+                        CONSTRAINT `fk_baskets_users1`
+                            FOREIGN KEY (`users_id`)
+                                REFERENCES `smart`.`users` (`id`)
+                                ON DELETE NO ACTION
+                                ON UPDATE NO ACTION);
 
--- -----------------------------------------------------
--- Table `smart`.`categories`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `smart`.`categories` (
                             `id` INT NOT NULL AUTO_INCREMENT,
                             `name` VARCHAR(45) NOT NULL,
                             `description` VARCHAR(45) NOT NULL,
+                            `img` VARCHAR(45) NOT NULL,
                             PRIMARY KEY (`id`));
 
 
@@ -30,12 +37,10 @@ CREATE TABLE IF NOT EXISTS `smart`.`categories` (
 CREATE TABLE IF NOT EXISTS `smart`.`brands` (
                             `id` INT NOT NULL AUTO_INCREMENT,
                             `name` VARCHAR(45) NOT NULL,
+                            `img` VARCHAR(45) NOT NULL,
                             PRIMARY KEY (`id`));
 
 
--- -----------------------------------------------------
--- Table `smart`.`product`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `smart`.`products` (
                  `id` INT NOT NULL AUTO_INCREMENT,
                  `name` VARCHAR(45) NOT NULL,
@@ -51,3 +56,22 @@ CREATE TABLE IF NOT EXISTS `smart`.`products` (
                  CONSTRAINT `fk_products_brands1`
                      FOREIGN KEY (`brands_id`)
                          REFERENCES `smart`.`brands` (`id`));
+
+CREATE TABLE IF NOT EXISTS `smart`.`baskets_products` (
+              `id` INT NOT NULL AUTO_INCREMENT,
+              `quantity` INT NOT NULL DEFAULT '1',
+                 `baskets_id` INT NOT NULL,
+                 `products_id` INT NOT NULL,
+                 PRIMARY KEY (`id`,`baskets_id`, `products_id`),
+                 INDEX `fk_baskets_has_products_products1_idx` (`products_id` ASC) VISIBLE,
+                 INDEX `fk_baskets_has_products_baskets1_idx` (`baskets_id` ASC) VISIBLE,
+                 CONSTRAINT `fk_baskets_has_products_baskets1`
+                     FOREIGN KEY (`baskets_id`)
+                         REFERENCES `smart`.`baskets` (`id`)
+                         ON DELETE NO ACTION
+                         ON UPDATE NO ACTION,
+                 CONSTRAINT `fk_baskets_has_products_products1`
+                     FOREIGN KEY (`products_id`)
+                         REFERENCES `smart`.`products` (`id`)
+                         ON DELETE NO ACTION
+                         ON UPDATE NO ACTION);

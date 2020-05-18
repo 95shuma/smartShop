@@ -28,3 +28,10 @@
     font-weight: 700;
     margin: 0;
 }
+.fa-cart-plus{
+    color: green;
+}
+
+.fa-cart-arrow-down{
+    color: red;
+}
