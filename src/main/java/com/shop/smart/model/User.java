@@ -51,9 +51,6 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Basket basket;
 
-    @OneToOne(mappedBy = "user")
-    private PasswordResetToken passwordResetToken;
-
     public Basket getBasket() {
         return null;
     }

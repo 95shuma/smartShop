@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +31,7 @@ public class UserController {
         this.encoder = encoder;
     }
 
-    @RequestMapping("/forgot-password")
+    @GetMapping("/forgot-password")
     public String pageForgotPassword(Model model) {
         return "forgot";
     }
@@ -41,20 +42,21 @@ public class UserController {
 
         if (!ur.existsUserByMail(email)) {
             attributes.addFlashAttribute("errorText", "Entered email does not exist!");
-            return "redirect:/forgot-password";
+            return "redirect:/";
         }
+
         PasswordResetToken pToken = PasswordResetToken.builder()
                 .user(ur.findUserByMail(email))
                 .token(UUID.randomUUID().toString())
                 .build();
-        System.out.println(pToken);
-        //resetRepo.deleteAll();
+
+        resetRepo.deleteAll();
         resetRepo.save(pToken);
 
         return "redirect:/forgot-success";
     }
 
-    @RequestMapping("/forgot-success")
+    @GetMapping("/forgot-success")
     public String pageResetPassword(Model model) {
         return "forgot-success";
     }
@@ -65,12 +67,13 @@ public class UserController {
                                           RedirectAttributes attributes) {
 
         if (!resetRepo.existsByToken(token)) {
-            attributes.addFlashAttribute("errorText", "Entered token does not exist!");
+            attributes.addFlashAttribute("errorText", "Entered email does not exist!");
             return "redirect:/reset-password";
         }
+
         PasswordResetToken pToken = resetRepo.findByToken(token);
         User user = pToken.getUser();
-        user.setPassword(encoder.encode(newPassword));
+        user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
 
         ur.save(user);
 
