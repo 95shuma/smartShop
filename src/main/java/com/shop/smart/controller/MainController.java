@@ -208,9 +208,10 @@ public class MainController {
     @RequestMapping("/products/{id}")
     public String getProduct(Model model, @PathVariable("id") Integer id){
         model.addAttribute("product",pr.findProductById(id));
-        if (rr.findAllByProduct_Id(id)==null){
+        if (rr.findAllByProduct_Id(id).size()==0){
             model.addAttribute("error","No reviews");
         } else {
+            System.out.println(rr.findAllByProduct_Id(id));
             model.addAttribute("reviews",rr.findAllByProduct_Id(id));
         }
         return "product";
@@ -280,7 +281,7 @@ public class MainController {
         var user = ur.findUserByMail(principal.getName());
         model.addAttribute("user",user);
         var basket = basketRepository.findBasketByUserAndSession(user, session.getId());
-        if (basketProductRepository.findBasketProductByBasket(basket) == null) {
+        if (basketProductRepository.findBasketProductByBasket(basket).size()==0) {
             model.addAttribute("error", "No element");
         } else {
             List<BasketProduct> bpr = basketProductRepository.findBasketProductByBasket(basket);
