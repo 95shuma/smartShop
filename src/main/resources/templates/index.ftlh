@@ -12,8 +12,8 @@
             <span style="font-size: 4em; color: #3498db">SMART </span><span style="font-size: 3em; color: #99FFFF">shop</span>
         </div>
         <#if user??>
-            <div class="col-2">
-                <h4>Hello, <a class="flex box-128" href="/profile">${user.name}</a></h4>
+            <div class="col-1">
+                <h6>Hello, <a class="flex box-128" href="/profile">${user.name}</a></h6>
             </div>
             <div class="col-1">
                 <form class="flex box-128" action="/logout" method="post">
@@ -25,21 +25,30 @@
             </div>
         </#if>
         <#if nouser??>
-            <div class="col-2">
-                <a class="flex box-128 btn btn-success" href="/registration"><h4> Sign in </h4></a>
+            <div class="col-1">
+                <a class="flex box-128 btn btn-success" href="/registration"><h6> Sign in </h6></a>
             </div>
-            <div class="col-2">
-                <a class="flex box-128 btn btn-primary" href="/login"><h4> Login </h4></a>
+            <div class="col-1">
+                <a class="flex box-128 btn btn-primary" href="/login"><h6> Login </h6></a>
             </div>
         </#if>
     </div>
-    <a href="/products?page=0&size=5"><h2>All Products</h2></a>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4">
+            <a href="/products?page=0&size=5"><h2>All Products</h2></a>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <a href="/"><h2>Brands</h2></a>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <a href="/"><h2>Categories</h2></a>
+        </div>
+    </div>
     <h2>Brands</h2>
     <ul>
         <div class="row text-center">
             <#list brands as brand>
-                <div class="card col-12 col-md-6 col-lg-4 mb-5">
-                    <p>ID: ${brand.id}</p>
+                <div class="card col-12 col-md-6 col-lg-4 mb-5" style="border-radius: 10%">
                     <p>Name: ${brand.name}</p>
                     <img src="${brand.img}" alt="${brand.img}" style="width: 300px; height: 300px">
                 </div>
@@ -50,8 +59,7 @@
     <ul>
         <div class="row text-center">
             <#list categories as cat>
-                <div class="card col-12 col-md-6 col-lg-4 mb-5">
-                    <p>ID: ${cat.id}</p>
+                <div class="card col-12 col-md-6 col-lg-4 mb-5" style="border-radius: 10%">
                     <p>Name: ${cat.name}</p>
                     <p>Description: ${cat.description}</p>
                     <img src="${cat.img}" alt="${cat.img}" style="width: 300px; height: 300px">

@@ -7,19 +7,23 @@
         <div class="col">
             <form action="/products/name">
                 <p><b>Поиск по названию</b></p>
-                <p><input type="text" name="name" placeholder="name"></p>
-                <input type="hidden" name="page" value="0">
-                <input type="hidden" name="size" value="5">
-                <p><input type="submit" value="Искать"></p>
+                <div class="search-box">
+                    <input class="search-txt" type="text" name="name" placeholder="name">
+                    <input type="hidden" name="page" value="0">
+                    <input type="hidden" name="size" value="5">
+                    <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
             </form>
         </div>
         <div class="col">
             <form action="/products/description">
                 <p><b>Поиск по описанию</b></p>
-                <p><input type="text" name="description" placeholder="description"></p>
-                <input type="hidden" name="page" value="0">
-                <input type="hidden" name="size" value="5">
-                <p><input type="submit" value="Искать"></p>
+                <div class="search-box">
+                    <input class="search-txt" type="text" name="description" placeholder="description">
+                    <input type="hidden" name="page" value="0">
+                    <input type="hidden" name="size" value="5">
+                    <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
             </form>
         </div>
         <div class="col">

@@ -1,19 +1,19 @@
 <#import "partials/main.ftlh" as main />
-<@main.renderWith>
+<@main.renderWith styles=["css/login.css"]>
 <section id="page-splash" class="page-splash">
     <div class="d-flex justify-content-center">
         <div class="mx-3">
-            <form id="registration-form" action="/registration" method="post">
-                <h3>Регистрация</h3>
+            <form class="box-1" id="registration-form" action="/registration" method="post">
+                <h1>Sign in</h1>
                 <#if _csrf??>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
                 </#if>
                 <input type="hidden" name="id" value="100">
-                <input type="email" name="mail" class="form-control mb-1" placeholder="Email">
-                <input type="text" name="name" class="form-control mb-1" placeholder="Полное имя">
-                <input type="text" name="login" class="form-control mb-1" placeholder="Логин">
-                <input type="password" name="password" class="form-control mb-1" placeholder="Пароль">
-                <button class="btn btn-outline-primary btn-block" type="submit">Зарегистрироваться</button>
+                <input type="email" name="mail" placeholder="Email">
+                <input type="text" name="name" placeholder="Name">
+                <input type="text" name="login" placeholder="Login">
+                <input type="password" name="password" placeholder="Password">
+                <button type="submit">Sign in</button>
             </form>
         </div>
     </div>

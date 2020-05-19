@@ -4,7 +4,7 @@
         <div class="row text-center">
             <#if products??>
                 <#list products as product>
-                    <div class="card col-12 col-md-6 col-lg-4 mb-5">
+                    <div class="card col-12 col-md-6 col-lg-4 mb-5" style="border-radius: 10%">
                         <div class="card1 h-100">
                             <img src="${product.img}" class="card-img-top" alt="Some Image0" style="height: 200px">
                             <div class="card-body border-top d-flex flex-column">
