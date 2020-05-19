@@ -3,11 +3,9 @@ package com.shop.smart.controller;
 import com.shop.smart.model.Basket;
 import com.shop.smart.model.BasketProduct;
 import com.shop.smart.model.Product;
-import com.shop.smart.repository.BasketProductRepository;
-import com.shop.smart.repository.BasketRepository;
-import com.shop.smart.repository.UserRepository;
+import com.shop.smart.model.Review;
+import com.shop.smart.repository.*;
 import com.shop.smart.service.PropertiesService;
-import com.shop.smart.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +36,9 @@ public class RestController {
 
     @Autowired
     UserRepository ur;
+
+    @Autowired
+    ReviewRepository rr;
 
     public RestController(PropertiesService propertiesService) {
         this.propertiesService = propertiesService;
@@ -119,5 +120,14 @@ public class RestController {
 //        return pr.findAll();
 //    }
 
-
+    @PostMapping("/products/review/addReview")
+    public Review addReview(@RequestParam("review") String text, @RequestParam("id") Integer id, Principal principal){
+        Review review = Review.builder()
+                .text(text)
+                .user(ur.findUserByMail(principal.getName()))
+                .product(pr.findProductById(id))
+                .build();
+        rr.save(review);
+        return review;
+    }
 }

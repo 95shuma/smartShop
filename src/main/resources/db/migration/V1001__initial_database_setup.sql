@@ -87,3 +87,22 @@ CREATE TABLE IF NOT EXISTS `smart`.`resets` (
                            REFERENCES `smart`.`users` (`id`)
                            ON DELETE NO ACTION
                            ON UPDATE NO ACTION);
+
+CREATE TABLE IF NOT EXISTS `smart`.`reviews` (
+                `id` INT NOT NULL AUTO_INCREMENT,
+                `text` VARCHAR(255) NOT NULL,
+                `users_id` INT NOT NULL,
+                `products_id` INT NOT NULL,
+                PRIMARY KEY (`id`),
+                INDEX `fk_reviews_users1_idx` (`users_id` ASC) VISIBLE,
+                INDEX `fk_reviews_products1_idx` (`products_id` ASC) VISIBLE,
+                CONSTRAINT `fk_reviews_users1`
+                    FOREIGN KEY (`users_id`)
+                        REFERENCES `smart`.`users` (`id`)
+                        ON DELETE NO ACTION
+                        ON UPDATE NO ACTION,
+                CONSTRAINT `fk_reviews_products1`
+                    FOREIGN KEY (`products_id`)
+                        REFERENCES `smart`.`products` (`id`)
+                        ON DELETE NO ACTION
+                        ON UPDATE NO ACTION);

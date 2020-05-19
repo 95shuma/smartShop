@@ -49,6 +49,9 @@ public class MainController {
     @Autowired
     ResetRepository resetRepo;
 
+    @Autowired
+    ReviewRepository rr;
+
     private final PropertiesService propertiesService;
     private final PasswordEncoder encoder;
 
@@ -205,6 +208,11 @@ public class MainController {
     @RequestMapping("/products/{id}")
     public String getProduct(Model model, @PathVariable("id") Integer id){
         model.addAttribute("product",pr.findProductById(id));
+        if (rr.findAllByProduct_Id(id)==null){
+            model.addAttribute("error","No reviews");
+        } else {
+            model.addAttribute("reviews",rr.findAllByProduct_Id(id));
+        }
         return "product";
     }
 
