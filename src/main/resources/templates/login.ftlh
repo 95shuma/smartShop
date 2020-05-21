@@ -1,4 +1,5 @@
-<#import "partials/main.ftlh" as main />
+<#import "/spring.ftl" as spring>
+<#import "partials/main1.ftlh" as main />
 
 <@main.renderWith styles=["css/login.css"]>
     <form class="box-1" action="/login" method="post">
@@ -11,12 +12,9 @@
         <#if _csrf??>
             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
         </#if>
-        <h1>Login</h1>
-        <input type="text" name="username" placeholder="Email address">
-        <input type="password" name="password" placeholder="Password">
-        <button type="submit">Login</button>
+        <h1><@spring.message "login" /></h1>
+        <input type="text" name="username" placeholder="<@spring.message "user.mail" />">
+        <input type="password" name="password" placeholder="<@spring.message "user.password" />">
+        <button type="submit"><@spring.message "login" /></button>
     </form>
-    <div class="bottom-box">
-        <a href="/">На главную страницу</a>
-    </div>
 </@main.renderWith>

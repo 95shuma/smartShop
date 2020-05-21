@@ -1,4 +1,4 @@
-<#import "partials/main.ftlh" as main />
+<#import "partials/main1.ftlh" as main />
 
 <@main.renderWith>
 

@@ -1,5 +1,5 @@
-<#import "partials/main.ftlh" as main />
-
+<#import "/spring.ftl" as spring>
+<#import "partials/main1.ftlh" as main />
 <@main.renderWith>
     <h2>Please enter token</h2>
     <#if errorText?? >

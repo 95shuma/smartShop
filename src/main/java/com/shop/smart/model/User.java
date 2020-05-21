@@ -42,6 +42,9 @@ public class User {
     @Builder.Default
     private boolean enabled = true;
 
+    @Column
+    private String lang;
+
     @NotBlank
     @Size(min = 1, max = 128)
     @Column(length = 128)

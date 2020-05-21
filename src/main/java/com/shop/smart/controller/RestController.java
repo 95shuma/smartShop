@@ -1,9 +1,6 @@
 package com.shop.smart.controller;
 
-import com.shop.smart.model.Basket;
-import com.shop.smart.model.BasketProduct;
-import com.shop.smart.model.Product;
-import com.shop.smart.model.Review;
+import com.shop.smart.model.*;
 import com.shop.smart.repository.*;
 import com.shop.smart.service.PropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +126,13 @@ public class RestController {
                 .build();
         rr.save(review);
         return review;
+    }
+
+    @PostMapping("/user/lang")
+    public User userLang(@RequestParam("lang") String lang, Principal principal){
+        User user=ur.findUserByMail(principal.getName());
+        user.setLang(lang);
+        ur.save(user);
+        return user;
     }
 }

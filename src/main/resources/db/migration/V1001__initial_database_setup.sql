@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `smart`.`users` (
                           `login` VARCHAR(45) NOT NULL,
                           `password` VARCHAR(128) NOT NULL,
                           `enabled` boolean NOT NULL default true,
+                          `lang` VARCHAR(45) NULL,
                           `role` varchar(16) NOT NULL default 'USER',
                           PRIMARY KEY (`id`),
                         UNIQUE INDEX `mail_unique` (`mail` ASC));

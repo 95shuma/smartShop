@@ -99,11 +99,15 @@ public class MainController {
     }
 
     @RequestMapping("/")
-    public String mainPage(Model model, Principal principal){
+    public String mainPage(Model model, Principal principal, HttpServletRequest uriBuilder){
         model.addAttribute("brands",br.findAll());
         model.addAttribute("categories",cr.findAll());
+        var uri = uriBuilder.getRequestURI();
         try{
             var user = ur.findUserByMail(principal.getName());
+            if(user.getLang()!=null){
+            uri.concat("?lang="+user.getLang());
+            }
             model.addAttribute("user",user);
         }catch (NullPointerException e){
             model.addAttribute("nouser",true);
@@ -126,11 +130,11 @@ public class MainController {
                 var user = ur.findUserByMail(principal.getName());
                 var basket = new Basket(user, session.getId());
                 basketRepository.save(basket);
-                model.addAttribute("authorization",1);
+                model.addAttribute("user",user);
             }catch(NullPointerException e){
                 var basket = new Basket(session.getId());
                 basketRepository.save(basket);
-                model.addAttribute("authorization",0);
+                model.addAttribute("nouser",true);
             }
         }
         return "products";
@@ -145,9 +149,9 @@ public class MainController {
             constructPageable(pr.findProductByName(name,page), propertiesService.getDefaultPageSize(), model,uri);
         try{
             var user = ur.findUserByMail(principal.getName());
-            model.addAttribute("authorization",1);
+            model.addAttribute("user",user);
         }catch (NullPointerException e){
-            model.addAttribute("authorization",0);
+            model.addAttribute("nouser",true);
         }
         return "products";
     }
@@ -158,9 +162,9 @@ public class MainController {
         constructPageable(pr.findProductByDescription(description,page), propertiesService.getDefaultPageSize(), model,uri);
         try{
             var user = ur.findUserByMail(principal.getName());
-            model.addAttribute("authorization",1);
+            model.addAttribute("user",user);
         }catch (NullPointerException e){
-            model.addAttribute("authorization",0);
+            model.addAttribute("nouser",true);
         }
         return "products";
     }
@@ -172,9 +176,9 @@ public class MainController {
         constructPageable(pr.findProductByBrand_Id(brand, page), propertiesService.getDefaultPageSize(), model,uri);
         try{
             var user = ur.findUserByMail(principal.getName());
-            model.addAttribute("authorization",1);
+            model.addAttribute("user",user);
         }catch (NullPointerException e){
-            model.addAttribute("authorization",0);
+            model.addAttribute("nouser",true);
         }
         return "products";
     }
@@ -185,9 +189,9 @@ public class MainController {
         constructPageable(pr.findProductByPrice(price, page), propertiesService.getDefaultPageSize(), model,uri);
         try{
             var user = ur.findUserByMail(principal.getName());
-            model.addAttribute("authorization",1);
+            model.addAttribute("user",user);
         }catch (NullPointerException e){
-            model.addAttribute("authorization",0);
+            model.addAttribute("nouser",true);
         }
         return "products";
     }
@@ -198,21 +202,27 @@ public class MainController {
         constructPageable(pr.findProductByCategory_Name(category, page), propertiesService.getDefaultPageSize(), model,uri);
         try{
             var user = ur.findUserByMail(principal.getName());
-            model.addAttribute("authorization",1);
+            model.addAttribute("user",user);
         }catch (NullPointerException e){
-            model.addAttribute("authorization",0);
+            model.addAttribute("nouser",true);
         }
         return "products";
     }
 
     @RequestMapping("/products/{id}")
-    public String getProduct(Model model, @PathVariable("id") Integer id){
+    public String getProduct(Model model, @PathVariable("id") Integer id, Principal principal){
         model.addAttribute("product",pr.findProductById(id));
         if (rr.findAllByProduct_Id(id).size()==0){
             model.addAttribute("error","No reviews");
         } else {
             System.out.println(rr.findAllByProduct_Id(id));
             model.addAttribute("reviews",rr.findAllByProduct_Id(id));
+        }
+        try{
+            var user = ur.findUserByMail(principal.getName());
+            model.addAttribute("user",user);
+        }catch (NullPointerException e){
+            model.addAttribute("nouser",true);
         }
         return "product";
     }

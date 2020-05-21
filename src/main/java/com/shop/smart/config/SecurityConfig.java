@@ -1,4 +1,4 @@
-package com.shop.smart;
+package com.shop.smart.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
