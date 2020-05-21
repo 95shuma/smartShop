@@ -1,3 +1,4 @@
+<#import "/spring.ftl" as spring>
 <#import "partials/main1.ftlh" as main />
 <@main.renderWith styles=["css/main.css","https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css","https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"] scripts=["/js/basket.js"]>
     <h1><@spring.message "hello" />, ${user.name}</h1>
