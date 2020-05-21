@@ -1,7 +1,7 @@
 <#import "/spring.ftl" as spring>
 <#macro renderWith title="Welcome to Smart-Shop!" scripts=[] styles=["css/main.css","https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css","https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"]>
     <!doctype html>
-    <html lang="en">
+    <html lang="${.locale}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport"

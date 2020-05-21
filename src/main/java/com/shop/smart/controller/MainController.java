@@ -107,7 +107,7 @@ public class MainController {
             var user = ur.findUserByMail(principal.getName());
             if(user.getLang()!=null){
             uri.concat("?lang="+user.getLang());
-            return "redirect:/?lang="+user.getLang();
+            //return "redirect:/?lang="+user.getLang();
             }
             model.addAttribute("user",user);
         }catch (NullPointerException e){
